@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="BauKraftApp" version="3.0"
+<web-app id="WebCommApp" version="3.0"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-	<display-name>BauKraft</display-name>
+	<display-name>WebComm</display-name>
 	<mime-mapping>
 		<extension>js</extension>
 		<mime-type>text/javascript</mime-type>
@@ -38,7 +38,7 @@
 	</listener>
 
 	<servlet>
-		<servlet-name>Baukraft REST Service</servlet-name>
+		<servlet-name>WebComm REST Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
@@ -61,7 +61,7 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Baukraft REST Service</servlet-name>
+		<servlet-name>WebComm REST Service</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 
