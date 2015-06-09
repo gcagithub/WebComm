@@ -1,0 +1,1 @@
+Test extension. Opens new tab with URL by clicking button.
