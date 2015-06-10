@@ -26,16 +26,20 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
+	       	<verbose>true</verbose>
           <source>1.8</source>
           <target>1.8</target>
+          <executable>${JAVA_1_8_HOME}/bin/javac</executable>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
+        <version>2.6</version>
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
           <failOnMissingWebXml>false</failOnMissingWebXml>
+<!-- 	      <warSourceExcludes>firefox/**,classes/**,m2e-wtp/**,META-INF/**</warSourceExcludes> -->
+	      <packagingExcludes>firefox/**,classes/**,m2e-wtp/**,META-INF/**</packagingExcludes>
         </configuration>
       </plugin>
     </plugins>
