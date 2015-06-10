@@ -18,8 +18,10 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+//import org.codehaus.jackson.annotate.JsonIgnore;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;

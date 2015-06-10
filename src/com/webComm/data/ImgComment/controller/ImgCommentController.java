@@ -1,11 +1,8 @@
 package com.webComm.data.ImgComment.controller;
 
-import java.util.Collection;
 import java.util.List;
 
-import com.webComm.data.ImgComment.ImgCommentSession;
 import com.webComm.hibernate.Controller;
-import com.webComm.hibernate.HibernateUtil;
 import com.webComm.hibernate.HibernatedEntity;
 import com.webComm.utils.Config;
 

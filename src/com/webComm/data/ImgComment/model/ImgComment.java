@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,15 @@ public class ImgComment extends HibernatedEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private static Log log = LogFactory.getLog(ImgComment.class);
+	
+	public ImgComment (MultivaluedMap<String, String> params) {
+		setComment(params.getFirst("comment"));
+		setTitle(params.getFirst("title"));
+		setImgSrc(params.getFirst("imgSrc"));
+		setCreatedOn(params.getFirst("createdOn"));
+		
+		this.createdOnDT = new Date();
+	}
 	
 	@Id
 	@Column(name = "id")
