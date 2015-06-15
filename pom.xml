@@ -37,7 +37,7 @@
         <version>2.6</version>
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <failOnMissingWebXml>true</failOnMissingWebXml>
 <!-- 	      <warSourceExcludes>firefox/**,classes/**,m2e-wtp/**,META-INF/**</warSourceExcludes> -->
 	      <packagingExcludes>firefox/**,classes/**,m2e-wtp/**,META-INF/**</packagingExcludes>
         </configuration>

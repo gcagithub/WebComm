@@ -11,6 +11,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.hibernate.criterion.Order;
+
 import com.webComm.data.ImgComment.controller.ImgCommentController;
 import com.webComm.data.ImgComment.model.ImgComment;
 import com.webComm.hibernate.HibernatedEntity;
@@ -23,9 +25,9 @@ public class ImgCommentService extends AService{
 	@GET
 	@Path("/getAllImgStatus")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ListImgCommentResponse getAllImgStatus(@QueryParam("imgSrcs[]") List<String> imgSrcs){
+	public ListImgCommentResponse getAllImgStatus(@QueryParam("imgHashIdList[]") List<String> hashIdList){
 		ImgCommentController controller = new ImgCommentController();
-		List<? extends HibernatedEntity> comments = controller.findAllByParameterList(ImgComment.class, "imgSrc", imgSrcs);
+		List<? extends HibernatedEntity> comments = controller.findAllByParameterList(ImgComment.class, "hashId", hashIdList);
 		return new ListImgCommentResponse(comments);
 	}
 	
@@ -44,7 +46,8 @@ public class ImgCommentService extends AService{
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public ListImgCommentResponse getAllImgComments(@QueryParam("hashId") String hashId){
 		ImgCommentController controller = new ImgCommentController();
-		List<? extends HibernatedEntity> comments = controller.findAllByParameter(ImgComment.class, "imgSrc", hashId);
+		List<? extends HibernatedEntity> comments = controller
+				.findAllByParameterAndOrder(ImgComment.class, "hashId", hashId, Order.asc("createdOnDT"));
 		return new ListImgCommentResponse(comments);
 	}
 }

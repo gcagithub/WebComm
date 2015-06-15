@@ -1,8 +1,6 @@
 package com.webComm.data.ImgComment.model;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,12 +23,16 @@ public class ImgComment extends HibernatedEntity implements Serializable {
 	
 	private static Log log = LogFactory.getLog(ImgComment.class);
 	
+	public ImgComment () {
+		createdOnDT = new Date();
+	}
+	
 	public ImgComment (MultivaluedMap<String, String> params) {
 		setComment(params.getFirst("comment"));
 		setTitle(params.getFirst("title"));
 		setImgSrc(params.getFirst("imgSrc"));
 		setCreatedOn(params.getFirst("createdOn"));
-		
+		setHashId(params.getFirst("hashId"));
 		this.createdOnDT = new Date();
 	}
 	
@@ -57,22 +59,21 @@ public class ImgComment extends HibernatedEntity implements Serializable {
 	@Column(name = "hash_id", length = 255)
 	private String hashId;
 	
-	public ImgComment () {
-		createdOnDT = new Date();
-	}
-	
 	public String getImgSrc() {
 		return imgSrc;
 	}
 	public void setImgSrc(String imgSrc) {
 		this.imgSrc = imgSrc;
-		try {
-			this.hashId = URLEncoder.encode(imgSrc, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			log.error("Error imgSrc html attribute encoding", e);
-			this.hashId = imgSrc;
-		}
 	}
+	
+	public String getHashId() {
+		return hashId;
+	}
+	
+	public void setHashId(String hashId) {
+		this.hashId = hashId; 
+	}
+	
 	public String getComment() {
 		return comment;
 	}
