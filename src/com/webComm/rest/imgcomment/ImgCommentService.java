@@ -1,5 +1,6 @@
 package com.webComm.rest.imgcomment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.hibernate.criterion.Order;
 
 import com.webComm.data.ImgComment.controller.ImgCommentController;
+import com.webComm.data.ImgComment.helpers.HashedImgComments;
 import com.webComm.data.ImgComment.model.ImgComment;
 import com.webComm.hibernate.HibernatedEntity;
 import com.webComm.rest.AService;
@@ -21,10 +23,24 @@ import com.webComm.rest.AService;
 @Path("/imgcomment")
 @Produces(MediaType.APPLICATION_JSON)
 public class ImgCommentService extends AService{
+	private int PERCENT_MATCHED = 75;
 
 	@GET
 	@Path("/getAllImgStatus")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public ListImgCommentResponse getAllImgStatusByHash(@QueryParam("imgHashIdList[]") List<String> hashIdList){
+		ImgCommentController controller = new ImgCommentController();
+		List<HashedImgComments> result = new ArrayList<HashedImgComments>();
+		List<? extends HibernatedEntity> comments;
+		for(String hashId : hashIdList){
+			comments = controller.findAllByTolerance(ImgComment.class, hashId, PERCENT_MATCHED);
+			if(!comments.isEmpty()){
+				result.add(new HashedImgComments(hashId, comments.size()));
+			}
+		}
+		return new ListImgCommentResponse(result);
+	}
+	
 	public ListImgCommentResponse getAllImgStatus(@QueryParam("imgHashIdList[]") List<String> hashIdList){
 		ImgCommentController controller = new ImgCommentController();
 		List<? extends HibernatedEntity> comments = controller.findAllByParameterList(ImgComment.class, "hashId", hashIdList);
@@ -47,7 +63,7 @@ public class ImgCommentService extends AService{
 	public ListImgCommentResponse getAllImgComments(@QueryParam("hashId") String hashId){
 		ImgCommentController controller = new ImgCommentController();
 		List<? extends HibernatedEntity> comments = controller
-				.findAllByParameterAndOrder(ImgComment.class, "hashId", hashId, Order.asc("createdOnDT"));
+				.findAllByToleranceOrder(ImgComment.class, hashId, Order.asc("createdOnDT"), PERCENT_MATCHED);
 		return new ListImgCommentResponse(comments);
 	}
 }

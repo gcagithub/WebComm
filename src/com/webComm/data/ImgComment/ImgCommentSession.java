@@ -2,6 +2,7 @@ package com.webComm.data.ImgComment;
 
 import java.io.File;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -13,11 +14,12 @@ import com.webComm.utils.HomeDir;
 
 public class ImgCommentSession extends SessionDescriptor {
 	private Configuration _configuration;
-	
+    private final SessionFactory SESSION_FACTORY;
 	
 	public ImgCommentSession (String name) {
 		super(name);
 		_configuration = configuration(name);
+		SESSION_FACTORY = createSessionFactory();
 	}
 	
 	private Configuration configuration(String name) {
@@ -28,11 +30,16 @@ public class ImgCommentSession extends SessionDescriptor {
 
 	}
 
-	@Override
-	public SessionFactory getSessionFactory() {
+
+	private SessionFactory createSessionFactory() {
 		StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder().
 				applySettings(_configuration.getProperties());
 		return _configuration.buildSessionFactory(serviceRegistryBuilder.build());
 		
 	}
+	
+	@Override
+	public SessionFactory getSessionFactory() {
+        return SESSION_FACTORY;
+    }
 }

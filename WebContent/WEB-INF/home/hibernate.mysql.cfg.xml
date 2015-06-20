@@ -19,10 +19,12 @@
 <!-- hibernate.c3p0.idle_test_periods must not be higher than hibernate.c3p0.timeout -->
         
         <property name="hibernate.format_sql">true</property>
+<!--         "jta", "thread", and "managed" -->
         <property name="hibernate.current_session_context_class">thread</property>
+<!--         <property name="hibernate.transaction.auto_close_session">true</property> -->
         <property name="hibernate.show_sql">true</property>
         
-        <property name="hibernate.c3p0.acquire_increment">1</property>
+<!--         <property name="hibernate.c3p0.acquire_increment">1</property> -->
         <property name="hibernate.c3p0.min_size">5</property>
         <property name="hibernate.c3p0.max_size">10</property>
         <property name="hibernate.c3p0.timeout">60</property>

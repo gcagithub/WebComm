@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.webComm.hibernate.HibernatedEntity;
-import com.webComm.json.Writer;
 import com.webComm.rest.AResponse;
 
 public class ListImgCommentResponse extends AResponse {
