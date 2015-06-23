@@ -19,36 +19,6 @@ public class ImgCommentController extends Controller {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<? extends HibernatedEntity> findAllByTolerance(
-				Class<? extends HibernatedEntity> clazz,
-				String hashId,
-				int perCentMatch
-			) {
-		
-		List<? extends HibernatedEntity> records = new ArrayList<>();
-		
-		if(hashId == null || hashId.isEmpty()) return records;
-		
-		beginTransaction();
-		
-		Criteria criteria = getSession().createCriteria(clazz);
-		criteria.add(Restrictions
-				.sqlRestriction(
-						"comparehash(?, {alias}.hash_id, 4) > ?",
-						new Object[]{hashId,perCentMatch},
-						new org.hibernate.type.Type[]{
-								org.hibernate.type.StandardBasicTypes.STRING,
-								org.hibernate.type.StandardBasicTypes.INTEGER
-								}
-						));
-		records = criteria.list();
-		
-		commitTransaction();
-		
-		return records;
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<? extends HibernatedEntity> findAllByParameterList(
 			Class<? extends HibernatedEntity> clazz, String paramname, List<String> param) {
 		List<? extends HibernatedEntity> records = new ArrayList<>();
@@ -68,31 +38,18 @@ public class ImgCommentController extends Controller {
 		return records;
 	}
 	
-	public Criteria createCriteria(Class<? extends HibernatedEntity> clazz) {
-		return getSession().createCriteria(clazz);
-	}
-	
-	public void addOrder(Class<? extends HibernatedEntity> clazz, Order order) {
-		beginTransaction();
-		createCriteria(clazz).addOrder(order);
-		commitTransaction();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<? extends HibernatedEntity> findAllByToleranceOrder(
 			Class<? extends HibernatedEntity> clazz,
 			Object param,
 			Order order,
 			int perCentMatch) {
+		
 		List<? extends HibernatedEntity> records;
+		
+		if(param == null) return new ArrayList<>();
 
 		beginTransaction();
-//		records = getSession()
-//				.createQuery(
-//						"select obj from " + clazz.getSimpleName() + " obj where obj."
-//								+ paramname + " = :param")
-//				.setParameter("param", param).list();
-		
 		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions
 				.sqlRestriction(
@@ -103,13 +60,13 @@ public class ImgCommentController extends Controller {
 								org.hibernate.type.StandardBasicTypes.INTEGER
 								}
 						));
-		criteria.addOrder(order);
+		if (order != null) criteria.addOrder(order);
+		
 		records = criteria.list();
 		
 		commitTransaction();
 		
 		return records;
-
 	}
 	
 }

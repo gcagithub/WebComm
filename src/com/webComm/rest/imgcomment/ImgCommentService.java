@@ -23,17 +23,17 @@ import com.webComm.rest.AService;
 @Path("/imgcomment")
 @Produces(MediaType.APPLICATION_JSON)
 public class ImgCommentService extends AService{
-	private int PERCENT_MATCHED = 75;
+	private final int PERCENT_MATCHED = 75;
 
 	@GET
-	@Path("/getAllImgStatus")
+	@Path("/status")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public ListImgCommentResponse getAllImgStatusByHash(@QueryParam("imgHashIdList[]") List<String> hashIdList){
 		ImgCommentController controller = new ImgCommentController();
 		List<HashedImgComments> result = new ArrayList<HashedImgComments>();
 		List<? extends HibernatedEntity> comments;
 		for(String hashId : hashIdList){
-			comments = controller.findAllByTolerance(ImgComment.class, hashId, PERCENT_MATCHED);
+			comments = controller.findAllByToleranceOrder(ImgComment.class, hashId, null, PERCENT_MATCHED);
 			if(!comments.isEmpty()){
 				result.add(new HashedImgComments(hashId, comments.size()));
 			}
@@ -48,7 +48,7 @@ public class ImgCommentService extends AService{
 	}
 	
 	@POST
-	@Path("/postImgComm")
+	@Path("/create")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public CreateImgCommentResponse createImgComment(MultivaluedMap<String, String> params) {
 		ImgCommentController controller = new ImgCommentController();
@@ -58,12 +58,12 @@ public class ImgCommentService extends AService{
 	}
 	
 	@GET
-	@Path("/getImgComm")
+	@Path("/comments")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public ListImgCommentResponse getAllImgComments(@QueryParam("hashId") String hashId){
 		ImgCommentController controller = new ImgCommentController();
 		List<? extends HibernatedEntity> comments = controller
-				.findAllByToleranceOrder(ImgComment.class, hashId, Order.asc("createdOnDT"), PERCENT_MATCHED);
+				.findAllByToleranceOrder(ImgComment.class, hashId, Order.desc("createdOnDT"), PERCENT_MATCHED);
 		return new ListImgCommentResponse(comments);
 	}
 }
