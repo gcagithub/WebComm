@@ -40,7 +40,7 @@ public class ImgCommentService extends AService{
 		}
 		return new ListImgCommentResponse(result);
 	}
-	
+		
 	public ListImgCommentResponse getAllImgStatus(@QueryParam("imgHashIdList[]") List<String> hashIdList){
 		ImgCommentController controller = new ImgCommentController();
 		List<? extends HibernatedEntity> comments = controller.findAllByParameterList(ImgComment.class, "hashId", hashIdList);

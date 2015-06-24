@@ -1,7 +1,7 @@
 package com.webComm.web;
 
-import com.webComm.data.Domain.DomainSession;
 import com.webComm.data.ImgComment.ImgCommentSession;
+import com.webComm.data.auth.AuthSession;
 import com.webComm.data.files.FilesSession;
 import com.webComm.data.files.storage.FSStorage;
 import com.webComm.hibernate.HibernateUtil;
@@ -29,10 +29,10 @@ public class Application {
 		initDefaultData();
 	}
 
-	@SuppressWarnings("unchecked")
 	private static void initDefaultData() {
 //		HibernateUtil.registerSession(new DomainSession());
 		HibernateUtil.registerSession(new ImgCommentSession(Config.get("project_name")));
+		HibernateUtil.registerSession(new AuthSession(Config.get("project_name")));
 	}
 
 	public static void stop() {

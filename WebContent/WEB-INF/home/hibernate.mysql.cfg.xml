@@ -32,5 +32,7 @@
         <property name="hibernate.c3p0.idle_test_period">60</property>
         
         <mapping class="com.webComm.data.ImgComment.model.ImgComment"/>
+        <mapping class="com.webComm.data.auth.model.User"/>
+        
     </session-factory>
 </hibernate-configuration>

@@ -37,6 +37,8 @@ public class HibernateUtil {
 	}
 
 	public static void registerSession(SessionDescriptor sessionDescriptor) {
+		if (sessions.containsKey(sessionDescriptor))
+			return;
 		sessions.put(sessionDescriptor.getSessionName(), sessionDescriptor);
 	}
 
