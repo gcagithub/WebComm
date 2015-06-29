@@ -53,10 +53,10 @@ public class ImgComment extends HibernatedEntity implements Serializable {
 	@Column(name = "created_on", length = 32)
 	private String createdOn;
 	
-	@Column(name = "created_on_dt")
+	@Column(name = "created_on_dt", updatable = false, nullable = false)
 	private Date createdOnDT;
 	
-	@Column(name = "hash_id", length = 255)
+	@Column(name = "hash_id", length = 255, nullable = false)
 	private String hashId;
 	
 	public String getImgSrc() {

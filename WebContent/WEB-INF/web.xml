@@ -62,7 +62,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>WebComm REST Service ver 0.1</servlet-name>
-		<url-pattern>/api/ver0.1/rest/*</url-pattern>
+		<url-pattern>/api/v0.1/rest/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

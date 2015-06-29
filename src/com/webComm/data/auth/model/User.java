@@ -13,8 +13,11 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mindrot.jbcrypt.BCrypt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webComm.hibernate.HibernatedEntity;
+
 
 @Entity
 @Table(name = "users")
@@ -22,25 +25,32 @@ public class User extends HibernatedEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(User.class);
 	
+	@JsonIgnore
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(name = "created_on_dt")
+	@JsonIgnore
+	@Column(name = "created_on_dt", updatable = false, nullable = false, columnDefinition = "Date of creation")
 	private Date createdOnDT;
 	
-	@Column(name = "email", length = 128)
+	@Column(name = "email", length = 128, nullable = false, unique = true, columnDefinition = "Can use as login")
 	private String email;
 	
-	@Column(name = "password", length = 128)
+	@JsonIgnore
+	@Column(name = "password", length = 64, nullable = false)
 	private String password;
 	
-	@Column(name = "username", length = 128)
+	@Column(name = "username", length = 32, nullable = false)
 	private String username;
 	
-	@Column(name = "session_id", length = 128)
+	@Column(name = "session_id", length = 32, nullable = false)
 	private String sessionId;
+	
+	public User () {
+		setCreatedOnDT(new Date());
+	}
 	
 	public User (MultivaluedMap<String, String> params) {
 		setUsername(params.getFirst("username"));
@@ -48,6 +58,14 @@ public class User extends HibernatedEntity implements Serializable {
 		setPassword(params.getFirst("password"));
 		setSessionId(params.getFirst("sessionId"));
 		setCreatedOnDT(new Date());
+	}
+	
+	public void applayPasswordBCrypt() {
+		setPassword(BCrypt.hashpw(getPassword(), BCrypt.gensalt()));
+	}
+	
+	public Long getId() {
+		return id;
 	}
 
 	public Date getCreatedOnDT() {

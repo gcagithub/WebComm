@@ -1,10 +1,9 @@
 package com.webComm.web;
 
-import com.webComm.data.ImgComment.ImgCommentSession;
-import com.webComm.data.auth.AuthSession;
 import com.webComm.data.files.FilesSession;
 import com.webComm.data.files.storage.FSStorage;
 import com.webComm.hibernate.HibernateUtil;
+import com.webComm.hibernate.WebCommSession;
 import com.webComm.utils.ApplicationEnvironment;
 import com.webComm.utils.Config;
 import com.webComm.utils.HomeDir;
@@ -31,8 +30,7 @@ public class Application {
 
 	private static void initDefaultData() {
 //		HibernateUtil.registerSession(new DomainSession());
-		HibernateUtil.registerSession(new ImgCommentSession(Config.get("project_name")));
-		HibernateUtil.registerSession(new AuthSession(Config.get("project_name")));
+		HibernateUtil.registerSession(new WebCommSession());
 	}
 
 	public static void stop() {
