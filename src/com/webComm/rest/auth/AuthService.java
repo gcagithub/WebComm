@@ -1,29 +1,23 @@
 package com.webComm.rest.auth;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.catalina.session.Constants;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.webComm.data.auth.controller.AuthController;
@@ -44,33 +38,34 @@ public class AuthService extends AService {
 		if (user != null) {
 			user.setSessionId(request.getSession(true).getId());
 		} else {
-			return Response.status(Status.BAD_REQUEST).build();
+			return Response.status(Status.BAD_REQUEST).entity(new AuthUserResponse(user)).type(MediaType.APPLICATION_JSON).build();
 		}
 		
-		SignupUserResponse respLogin = new SignupUserResponse(user);
-		ResponseBuilder response = Response.ok(respLogin, MediaType.APPLICATION_JSON);
+		AuthUserResponse respLogin = new AuthUserResponse(user);
+		ResponseBuilder response;
 		
 //		user.applayPasswordBCrypt();
 		
-		Map<String, String> params = new HashMap<String, String>(2);
+		Map<String, String> params = new HashMap<String, String>(1);
 		params.put("email", user.getEmail());
-//		params.put("password", user.getPassword());
+
 		User storedUser = getUserByParams(params);
 				
 		if(storedUser == null) {
 			//not exist
-			respLogin.signedin = Status.NOT_FOUND.getStatusCode();
+			response = Response.status(Status.NOT_FOUND);
 		} else if (BCrypt.checkpw(user.getPassword(), storedUser.getPassword())){
-			response.cookie(new NewCookie("username", storedUser.getUsername()));
 			request.getSession().setAttribute("email", storedUser.getEmail());
 			request.getSession().setMaxInactiveInterval(60*60); // 1 hour
 			
-			respLogin.signedin = Status.ACCEPTED.getStatusCode();
+			response = Response.status(Status.ACCEPTED);
+			response.cookie(new NewCookie("username", storedUser.getUsername()));
+			respLogin.signedin = 1;
 		} else {
-			respLogin.signedin = Status.UNAUTHORIZED.getStatusCode();
+			response = Response.status(Status.UNAUTHORIZED);
 		}
 		
-		return response.build();
+		return response.entity(respLogin).type(MediaType.APPLICATION_JSON).build();
 	}
 	
 	@POST
@@ -96,19 +91,18 @@ public class AuthService extends AService {
 		if (user != null) {
 			user.setSessionId(request.getSession(true).getId());
 		} else {
-			return Response.status(Status.BAD_REQUEST).build();
+			return Response.status(Status.BAD_REQUEST).entity(new AuthUserResponse(user)).type(MediaType.APPLICATION_JSON).build();
 		}
 		
-		SignupUserResponse respSignUp = new SignupUserResponse(user);
-		ResponseBuilder response = Response.ok(respSignUp, MediaType.APPLICATION_JSON);
+		AuthUserResponse respSignUp = new AuthUserResponse(user);
+		ResponseBuilder response;
 		
 		Map<String, String> params = new HashMap<String, String>(1);
 		params.put("email", user.getEmail());
 		
 		if(getUserByParams(params) != null){
 			//already exist
-			respSignUp.signedin = Status.CONFLICT.getStatusCode();
-			return response.build();
+			return Response.status(Status.CONFLICT).entity(respSignUp).type(MediaType.APPLICATION_JSON).build();
 		}
 		
 		user.applayPasswordBCrypt();
@@ -116,21 +110,23 @@ public class AuthService extends AService {
 		Long id = getAuthController().save(User.class, user);
 		
 		if(id == 0) {
-			respSignUp.signedin = Status.INTERNAL_SERVER_ERROR.getStatusCode();
+			response = Response.status(Status.INTERNAL_SERVER_ERROR);
 		} else {
-			respSignUp.signedin = Status.CREATED.getStatusCode();
+			respSignUp.signedin = 1;
 			
+			response = Response.status(Status.CREATED);
 			response.cookie(new NewCookie("username", user.getUsername()));
+			
 			request.getSession().setAttribute("email", user.getEmail());
 			request.getSession().setMaxInactiveInterval(60*60); // 1 hour
 		}
 		
-		return response.build();
+		return response.entity(respSignUp).type(MediaType.APPLICATION_JSON).build();
 	}
 	
 	@POST
 	@Path("/dummy")
-//	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response dummy (InputStream input) {
 		return null;
 	}
